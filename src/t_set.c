@@ -51,12 +51,12 @@ robj *setTypeCreate(sds value) {
  * returned, otherwise the new element is added and 1 is returned. */
 int setTypeAdd(robj *subject, sds value) {
     long long llval;
-    if (subject->encoding == OBJ_ENCODING_HT) {
+    if (subject->encoding == OBJ_ENCODING_HT) {//如果encoding 类型是hashtable
         dict *ht = subject->ptr;
         dictEntry *de = dictAddRaw(ht,value,NULL);
         if (de) {
-            dictSetKey(ht,de,sdsdup(value));
-            dictSetVal(ht,de,NULL);
+            dictSetKey(ht,de,sdsdup(value));  //把value设置为hashtable的key
+            dictSetVal(ht,de,NULL);           //hashtable的value设置 null
             return 1;
         }
     } else if (subject->encoding == OBJ_ENCODING_INTSET) {
@@ -309,10 +309,10 @@ void saddCommand(client *c) {
     
     if (set == NULL) {//如果db中不存在
         set = setTypeCreate(c->argv[2]->ptr);//创建set类型 根据 参数<==>argv[2] 能否转换位整型数据(long) 1.intset类型 2.hashtable类型
-        dbAdd(c->db,c->argv[1],set);
+        dbAdd(c->db,c->argv[1],set);//添加到db数据库中
     }
 
-    for (j = 2; j < c->argc; j++) {
+    for (j = 2; j < c->argc; j++) {//遍历所有参数 从第三个参数开始
         if (setTypeAdd(set,c->argv[j]->ptr)) added++;
     }
     if (added) {
