@@ -45,14 +45,14 @@
 #define DICT_ERR 1
 
 typedef struct dictEntry {
-    void *key;
+    void *key;  //STRING - sds 类型
     union {
-        void *val;
+        void *val; //value ---> redisObject
         uint64_t u64;
         int64_t s64;
         double d;
     } v;
-    struct dictEntry *next;     /* Next entry in the same hash bucket. */
+    struct dictEntry *next;     /* Next entry in the same hash bucket. */  //如果发生了hash冲突，通过next指针建立链表
     void *metadata[];           /* An arbitrary number of bytes (starting at a
                                  * pointer-aligned address) of size as returned
                                  * by dictType's dictEntryMetadataBytes(). */
@@ -77,10 +77,10 @@ typedef struct dictType {
 #define DICTHT_SIZE_MASK(exp) ((exp) == -1 ? 0 : (DICTHT_SIZE(exp))-1)
 
 struct dict {
-    dictType *type;
+    dictType *type;  //字典类型
 
-    dictEntry **ht_table[2];
-    unsigned long ht_used[2];
+    dictEntry **ht_table[2]; //hashtable ht[0]  ht[1] 为了渐进式扩容
+    unsigned long ht_used[2]; //hashtable中使用了多少
 
     long rehashidx; /* rehashing not in progress if rehashidx == -1 */
 

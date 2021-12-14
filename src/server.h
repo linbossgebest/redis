@@ -742,13 +742,13 @@ typedef struct RedisModuleDigest {
 #define OBJ_STATIC_REFCOUNT (INT_MAX-1) /* Object allocated in the stack. */
 #define OBJ_FIRST_SPECIAL_REFCOUNT OBJ_STATIC_REFCOUNT
 typedef struct redisObject {
-    unsigned type:4;
-    unsigned encoding:4;
+    unsigned type:4;  //4bit长度  可表示类型：string,list,set,zset,hash...
+    unsigned encoding:4; //4bit长度  编码类型 int raw embstr ziplist （使用不同的编码方式存储数据）
     unsigned lru:LRU_BITS; /* LRU time (relative to global lru_clock) or
                             * LFU data (least significant 8 bits frequency
                             * and most significant 16 bits access time). */
-    int refcount;
-    void *ptr;
+    int refcount; //引用计数法，没有对象引用时进行释放
+    void *ptr;//指向内存地址的指针 真正的值所在
 } robj;
 
 /* The a string name for an object's type as listed above
@@ -811,7 +811,7 @@ typedef struct clusterSlotToKeyMapping clusterSlotToKeyMapping;
  * database. The database number is the 'id' field in the structure. */
 typedef struct redisDb {
     dict *dict;                 /* The keyspace for this DB */ // 所有键值对字典
-    dict *expires;              /* Timeout of keys with a timeout set */
+    dict *expires;              /* Timeout of keys with a timeout set */ //key对应过期时间的字典
     dict *blocking_keys;        /* Keys with clients waiting for data (BLPOP)*/
     dict *ready_keys;           /* Blocked keys that received a PUSH */
     dict *watched_keys;         /* WATCHED keys for MULTI/EXEC CAS */
