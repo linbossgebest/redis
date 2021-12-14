@@ -989,7 +989,7 @@ struct redisCommand redisCommandTable[] = {
       {"write",
        KSPEC_BS_INDEX,.bs.index={2},
        KSPEC_FK_RANGE,.fk.range={0,1,0}}}},
-
+    //set add 命令
     {"sadd",saddCommand,-3,
      "write use-memory fast @set",
      {{"write",

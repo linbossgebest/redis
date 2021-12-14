@@ -299,16 +299,16 @@ robj *setTypeDup(robj *o) {
     }
     return set;
 }
-
+//set add 命令
 void saddCommand(client *c) {
     robj *set;
     int j, added = 0;
 
-    set = lookupKeyWrite(c->db,c->argv[1]);
-    if (checkType(c,set,OBJ_SET)) return;
+    set = lookupKeyWrite(c->db,c->argv[1]);//在db中查找 key <==> argv[1]
+    if (checkType(c,set,OBJ_SET)) return; //检查类型，看当前根据key找到数据类型是否是 set类型
     
-    if (set == NULL) {
-        set = setTypeCreate(c->argv[2]->ptr);
+    if (set == NULL) {//如果db中不存在
+        set = setTypeCreate(c->argv[2]->ptr);//创建set类型 根据 参数<==>argv[2] 能否转换位整型数据(long) 1.intset类型 2.hashtable类型
         dbAdd(c->db,c->argv[1],set);
     }
 
