@@ -59,10 +59,10 @@ int setTypeAdd(robj *subject, sds value) {
             dictSetVal(ht,de,NULL);           //hashtable的value设置 null
             return 1;
         }
-    } else if (subject->encoding == OBJ_ENCODING_INTSET) {
-        if (isSdsRepresentableAsLongLong(value,&llval) == C_OK) {
+    } else if (subject->encoding == OBJ_ENCODING_INTSET) {//如果encoding 类型是intset
+        if (isSdsRepresentableAsLongLong(value,&llval) == C_OK) {//如果value可以转换位整型(long)
             uint8_t success = 0;
-            subject->ptr = intsetAdd(subject->ptr,llval,&success);
+            subject->ptr = intsetAdd(subject->ptr,llval,&success);//往intset 本质是个数组 中插入value
             if (success) {
                 /* Convert to regular set when the intset contains
                  * too many entries. */

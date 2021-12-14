@@ -810,7 +810,7 @@ typedef struct clusterSlotToKeyMapping clusterSlotToKeyMapping;
  * by integers from 0 (the default database) up to the max configured
  * database. The database number is the 'id' field in the structure. */
 typedef struct redisDb {
-    dict *dict;                 /* The keyspace for this DB */
+    dict *dict;                 /* The keyspace for this DB */ // 所有键值对字典
     dict *expires;              /* Timeout of keys with a timeout set */
     dict *blocking_keys;        /* Keys with clients waiting for data (BLPOP)*/
     dict *ready_keys;           /* Blocked keys that received a PUSH */

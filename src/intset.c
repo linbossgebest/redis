@@ -204,30 +204,30 @@ static void intsetMoveTail(intset *is, uint32_t from, uint32_t to) {
 
 /* Insert an integer in the intset */
 intset *intsetAdd(intset *is, int64_t value, uint8_t *success) {
-    uint8_t valenc = _intsetValueEncoding(value);
+    uint8_t valenc = _intsetValueEncoding(value);//判断数据范围 int16 int 32 int64
     uint32_t pos;
     if (success) *success = 1;
 
     /* Upgrade encoding if necessary. If we need to upgrade, we know that
      * this value should be either appended (if > 0) or prepended (if < 0),
      * because it lies outside the range of existing values. */
-    if (valenc > intrev32ifbe(is->encoding)) {
+    if (valenc > intrev32ifbe(is->encoding)) { //如果value超过数据范围，则升级数据类型，并添加
         /* This always succeeds, so we don't need to curry *success. */
         return intsetUpgradeAndAdd(is,value);
     } else {
         /* Abort if the value is already present in the set.
          * This call will populate "pos" with the right position to insert
          * the value when it cannot be found. */
-        if (intsetSearch(is,value,&pos)) {
+        if (intsetSearch(is,value,&pos)) {//查重 看数据是否存在（二分查找法）
             if (success) *success = 0;
             return is;
         }
 
-        is = intsetResize(is,intrev32ifbe(is->length)+1);
+        is = intsetResize(is,intrev32ifbe(is->length)+1);//数组扩容
         if (pos < intrev32ifbe(is->length)) intsetMoveTail(is,pos,pos+1);
     }
 
-    _intsetSet(is,pos,value);
+    _intsetSet(is,pos,value);//value添加到intset  pos位置
     is->length = intrev32ifbe(intrev32ifbe(is->length)+1);
     return is;
 }

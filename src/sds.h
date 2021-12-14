@@ -44,29 +44,29 @@ typedef char *sds;
 
 /* Note: sdshdr5 is never used, we just access the flags byte directly.
  * However is here to document the layout of type 5 SDS strings. */
-struct __attribute__ ((__packed__)) sdshdr5 {
+struct __attribute__ ((__packed__)) sdshdr5 { //0-2^5-1 使用5个bit位描述头节点长度
     unsigned char flags; /* 3 lsb of type, and 5 msb of string length */
     char buf[];
 };
-struct __attribute__ ((__packed__)) sdshdr8 {
+struct __attribute__ ((__packed__)) sdshdr8 { //2^5-2^8-1
     uint8_t len; /* used */
-    uint8_t alloc; /* excluding the header and null terminator */
+    uint8_t alloc; /* excluding the header and null terminator */ //表示分配了多少空间
     unsigned char flags; /* 3 lsb of type, 5 unused bits */
     char buf[];
 };
-struct __attribute__ ((__packed__)) sdshdr16 {
+struct __attribute__ ((__packed__)) sdshdr16 {//2^8-2^16-1
     uint16_t len; /* used */
     uint16_t alloc; /* excluding the header and null terminator */
     unsigned char flags; /* 3 lsb of type, 5 unused bits */
     char buf[];
 };
-struct __attribute__ ((__packed__)) sdshdr32 {
+struct __attribute__ ((__packed__)) sdshdr32 {//2^16-2^32-1
     uint32_t len; /* used */
     uint32_t alloc; /* excluding the header and null terminator */
     unsigned char flags; /* 3 lsb of type, 5 unused bits */
     char buf[];
 };
-struct __attribute__ ((__packed__)) sdshdr64 {
+struct __attribute__ ((__packed__)) sdshdr64 {//2^32-2^64-1
     uint64_t len; /* used */
     uint64_t alloc; /* excluding the header and null terminator */
     unsigned char flags; /* 3 lsb of type, 5 unused bits */
